@@ -1,0 +1,136 @@
+
+<div class="jumbotron">
+  <div class="wrapperjumbo col-sm-offset-4">
+  <h1 class=""><i class="fa fa-money" aria-hidden="true"></i> Kostenrechner </h1>
+<br>
+    <p>Lackschaden? - Reparaturkosten schnell berechnen.</p>
+  <p class=""><a class="btn btn-primary btn-lg" href="/learnmore" role="button"><i class="fa fa-info" aria-hidden="true"></i> mehr erfahren  </a></p>
+</div>
+</div>
+
+
+<div class="container">
+    <div class="col-sm-12 col-sm-offset-5 onehundert"  ng-show="main.calc==0">
+      <md-progress-circular  md-diameter="150"></md-progress-circular>
+      </div>
+    <div class="col-sm-12 onehundert" ng-show="main.calc==1">
+      <form name="projectForm"  >
+        <div class="col-sm-5 small-title" >
+      <h3 class="label-top">1.    <i class="fa fa-map" aria-hidden="true"></i></h3><h3 class="label-top">Postleitzahl eingeben</h3>
+        </div>
+
+
+
+
+
+      <div class="single-input col-sm-2 postalfield">
+      <md-input-container class="sm-block" flex-gt-sm="">
+
+        <input id="plz" ng-model="main.postal" class="centered" name="postalCode"   required="" ng-pattern="/^[0-9]{5}$/">
+
+        <div ng-messages="projectForm.postalCode.$error" role="alert" >
+          <div ng-message="required" class="my-message">Gültige Postleitzahl eingeben.</div>
+        </div>
+      </md-input-container>
+    </div>
+
+    <hr class="style-four" />
+        <div class="col-sm-5 small-title">
+      <h3 style="" class="label-top">2.    <i class="fa fa-car" aria-hidden="true"></i></h3> <h3 class="label-top">beschädigtes Teil auswählen </h3>
+        </div>
+        <div class="margin-top col-sm-8 col-sm-offset-2 medium-font">
+          <div class="carsize">
+            <span>Fahrzeuggröße</span>
+          </div>
+          <md-checkbox class="md-checkbox" md-no-ink ng-model="main.size" ng-true-value="0" aria-label="No Ink Effects">
+            Kleinwagen
+          </md-checkbox>
+          <md-checkbox class="md-checkbox" md-no-ink ng-model="main.size" ng-true-value="1" aria-label="No Ink Effects">
+            Limousine
+          </md-checkbox>
+          <md-checkbox class="md-checkbox" md-no-ink ng-model="main.size" ng-true-value="2" aria-label="No Ink Effects">
+            Combi
+          </md-checkbox>
+          <md-checkbox class="md-checkbox" md-no-ink ng-model="main.size" ng-true-value="3" aria-label="No Ink Effects">
+            Transporter / SUV
+          </md-checkbox>
+        </div>
+      <car></car>
+        <br>
+      <hr class="style-four" />
+        <div class="col-sm-5 small-title">
+      <h3 class="label-top">3.    <i class="fa fa-wrench" aria-hidden="true"></i></h3><h3 class="label-top">Schadentyp wählen</h3>
+        </div>
+      <div class="col-sm-12 medium-font" style="margin-bottom: 40px;">
+        <div class="col-sm-offset-5 col-sm-4 padding-no">
+          <div class="padding-top"><span>Kratzer</span></div>
+
+
+      <md-switch md-no-ink ng-model="main.deformation" aria-label="No Ink Effects" class="margin-no">
+        Beule
+      </md-switch>
+      </div>
+      </div>
+
+
+      <hr style="margin-top:20px;" class="style-four" />
+        <div class="col-sm-offset-5 col-sm-2">
+      <md-button type="submit" ng-click="main.calculate()" ng-disabled="((main.select.length==0)||(!main.postal)||(form.$invalid))" class=" btn btn-primary btn-lg"><i class="fa fa-calculator" aria-hidden="true"></i> Rechnen</md-button>
+        <p ng-show="!main.postal" class="warning">Postleitzahl eingeben</p>
+          <p ng-show="main.select.length == 0" class="warning">Teil auswählen</p>
+        </div>
+      </form>
+    </div>
+
+
+
+
+    <div class="col-sm-12 mobile-margin" ng-show="main.calc==2">
+        <h3> Die Kosten für eine Instandsetzung betragen: {{main.result}} €</h3>
+        <p>Bei den Kosten handelt es sich um Richtwerte aus unserer Erfahrung. </p>
+        <p>Weitere Einflussfaktoren, wie Fahrzeugalter, Farbe oder der Zustand des Teils, können Einfluss auf den Preis haben. </p>
+        <p>Folgende Lackier- und Smartrepair-Betriebe in Ihrer Nähe können wir empfehlen: </p>
+
+          <div class="profiles" ng-repeat="profile in main.profiles">
+            <div class="left pic col-sm-1"><img class="responsive" src="/assets/images/can.jpg"></div>
+
+
+
+
+            <div class="middle col-sm-2">
+             <span class="middle"><a ng-attr-href="{{(main.admin) ? '/profileEdit/'+profile._id : profile.gmap}}" class="medium-font" >{{profile.name}} </a></span>
+            </div>
+              <div class="col-sm-9 col-lg-5 col-lg-offset-4">
+                <div class="col-sm-12 info-wrapper">
+                  <div class="col-xs-12">
+                  <a  href="{{profile.gmap}}" class="left marker" > <i class="fa fa-map-marker" aria-hidden="true" ></i> </a>
+                  <div class="left street infoitem"> {{profile.adress.street}} </div>
+                  <div class="left infoitem postal"> {{profile.adress.postal}} </div>
+                  <div class="left infoitem"> {{profile.adress.town}} </div>
+
+              </div>
+                  <div class="col-xs-12">
+                  <a  href="{{profile.gmap}}" class="left marker" > <i class="fa fa-car" aria-hidden="true" ></i> </a>
+                  <div class="left"> {{profile.distance.text}} </div>
+                  </div>
+                  <div class="col-xs-12">
+                  <a ng-if="profile.phone" href="tel:{{profile.phone}}" class="left infoitem" > <i class="fa fa-phone" aria-hidden="true" ></i> </a>
+                  <div class="left infoitem"> {{profile.phone}} </div>
+                    </div>
+                  <div class="col-xs-12">
+                  <a ng-if="profile.email" href="mailto:({{profile.email}})" class="infoitem left"><i class="fa fa-envelope" aria-hidden="true" ></i> </a>
+                  <div class="left infoitem"> {{profile.email}} </div>
+                    </div>
+                </div>
+              </div>
+
+
+
+            </div>
+      <div  class="col-xs-10 col-xs-offset-1" id="googleMap" style="height:380px;max-width: none;"></div>
+
+      <md-button ng-click="main.calc=1" class="col-sm-offset-5 btn btn-primary btn-lg"><i class="fa fa-calculator" aria-hidden="true"></i>Neu Rechnen</md-button>
+      </div>
+
+  </div>
+</div>
